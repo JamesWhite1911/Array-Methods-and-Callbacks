@@ -63,10 +63,26 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(data, finals) {
+    let winners = data.map(function(team) {
+        let tie = team["Win conditions"].split(" "); // The data format is inconsistent but this works for the majority of cases
+        if (team["Away Team Goals"] > team["Home Team Goals"]){
+            return team["Away Team Name"];
+        }
+        else if (team["Away Team Goals"] < team["Home Team Goals"]){
+            return team["Home Team Name"];
+        }
+        else if (team["Away Team Goals"] === team["Home Team Goals"]){
+            if (tie[0] === ["Home Team Name"]){
+                return ["Home Team Name"];
+            }
+            else if (tie[0] === ["Away Team Name"]){
+                return ["Away Team Name"];
+            }
+        }
+    });
+    return winners;
 }
-
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 5: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
@@ -79,8 +95,11 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(data, years, winners) {
+    let str = winners(data).map(function(team, i) {
+        return `In ${years(data)[i]}, ${team} won the world cup!`;
+    });
+    return str;
 }
 
 
@@ -95,10 +114,18 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(/* code here */) {
-   /* code here */
+function getAverageGoals(finals) {
+    let homeSum = finals.reduce(function(total, index) {
+        let sum = total + index["Home Team Goals"];
+        return sum;
+    }, 0);
+    let awaySum = finals.reduce(function(total, index) {
+        let sum = total + index["Away Team Goals"];
+        return sum;
+    }, 0);
+    let goalSum = homeSum + awaySum;
+    return (goalSum / finals.length).toFixed(2);
 }
-
 
 
 
